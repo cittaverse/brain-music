@@ -82,14 +82,17 @@ async function loadDB() {
 // 渲染目标卡片
 function renderTargets() {
   const grid = document.getElementById('targetGrid');
-  grid.innerHTML = db.targets.map(target => `
-    <div class="target-card" data-target="${target.target_id}">
-      <div class="target-icon">${target.icon}</div>
-      <div class="target-name">${target.name}</div>
-      <div class="target-desc">${target.description}</div>
-      <div class="target-duration">${target.recommended_duration}分钟</div>
-    </div>
-  `).join('');
+  grid.innerHTML = db.targets.map(target => {
+    const iconSvg = getTargetIcon(target.target_id);
+    return `
+      <div class="target-card" data-target="${target.target_id}">
+        <div class="target-icon">${iconSvg}</div>
+        <div class="target-name">${target.name}</div>
+        <div class="target-desc">${target.description}</div>
+        <div class="target-duration">${target.recommended_duration}分钟</div>
+      </div>
+    `;
+  }).join('');
   
   // 绑定点击事件
   grid.querySelectorAll('.target-card').forEach(card => {
