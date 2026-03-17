@@ -59,56 +59,62 @@
     {
       "playlist_id": "focus-001",
       "target_id": "focus",
-      "platform": "spotify",
-      "external_url": "https://open.spotify.com/playlist/37i9dQZF1DWZeKCadgRdKQ",
+      "platform": "youtube",
+      "youtube_id": "jfKfPfyJRdk",
+      "embed_url": "https://www.youtube.com/embed/jfKfPfyJRdk?autoplay=1",
       "bpm_range": "60-80",
       "has_lyrics": false,
-      "genre_tags": ["ambient", "classical", "lo-fi"]
+      "genre_tags": ["lo-fi", "study", "focus"]
     },
     {
       "playlist_id": "calm-001",
       "target_id": "calm",
-      "platform": "spotify",
-      "external_url": "https://open.spotify.com/playlist/37i9dQZF1DX4sWSpwq3LiO",
+      "platform": "youtube",
+      "youtube_id": "1ZYbU82GVz4",
+      "embed_url": "https://www.youtube.com/embed/1ZYbU82GVz4?autoplay=1",
       "bpm_range": "50-70",
       "has_lyrics": false,
-      "genre_tags": ["ambient", "nature", "meditation"]
+      "genre_tags": ["meditation", "relax", "calm"]
     },
     {
       "playlist_id": "energy-001",
       "target_id": "energy",
-      "platform": "spotify",
-      "external_url": "https://open.spotify.com/playlist/37i9dQZF1DX76Wlfdnj7AP",
+      "platform": "youtube",
+      "youtube_id": "7NO4LqqLwqE",
+      "embed_url": "https://www.youtube.com/embed/7NO4LqqLwqE?autoplay=1",
       "bpm_range": "120-140",
-      "has_lyrics": true,
-      "genre_tags": ["electronic", "pop", "rock"]
+      "has_lyrics": false,
+      "genre_tags": ["electronic", "energy", "workout"]
     },
     {
       "playlist_id": "creative-001",
       "target_id": "creative",
-      "platform": "spotify",
-      "external_url": "https://open.spotify.com/playlist/37i9dQZF1DX1s9knjPY1Oa",
+      "platform": "youtube",
+      "youtube_id": "5qap5aO4i9A",
+      "embed_url": "https://www.youtube.com/embed/5qap5aO4i9A?autoplay=1",
       "bpm_range": "70-100",
       "has_lyrics": false,
-      "genre_tags": ["jazz", "classical", "world"]
+      "genre_tags": ["lo-fi", "creative", "chill"]
     },
     {
       "playlist_id": "memory-001",
       "target_id": "memory",
-      "platform": "spotify",
-      "external_url": "https://open.spotify.com/playlist/37i9dQZF1DWVFeEut75IAL",
+      "platform": "youtube",
+      "youtube_id": "4xDzrJKX8Kc",
+      "embed_url": "https://www.youtube.com/embed/4xDzrJKX8Kc?autoplay=1",
       "bpm_range": "60-90",
       "has_lyrics": false,
-      "genre_tags": ["classical", "baroque", "ambient"]
+      "genre_tags": ["classical", "study", "memory"]
     },
     {
       "playlist_id": "sleep-001",
       "target_id": "sleep",
-      "platform": "spotify",
-      "external_url": "https://open.spotify.com/playlist/37i9dQZF1DWZd79rJ6a7lp",
+      "platform": "youtube",
+      "youtube_id": "lTRiuvtWV54",
+      "embed_url": "https://www.youtube.com/embed/lTRiuvtWV54?autoplay=1",
       "bpm_range": "40-60",
       "has_lyrics": false,
-      "genre_tags": ["ambient", "nature", "drone"]
+      "genre_tags": ["sleep", "relax", "deep-sleep"]
     }
   ],
   "checkins": [],

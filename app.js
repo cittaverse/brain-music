@@ -102,10 +102,30 @@ function selectTarget(targetId) {
   state.selectedTarget = db.targets.find(t => t.target_id === targetId);
   const playlist = db.playlists.find(p => p.playlist_id === state.selectedTarget.playlist_id);
   
-  // 更新播放页面
+  // 更新播放页面 - 内嵌 YouTube 播放器
   document.getElementById('playerTitle').textContent = state.selectedTarget.name;
-  document.getElementById('playBtn').href = playlist.external_url;
-  document.getElementById('playBtn').textContent = `在 ${playlist.platform} 播放 →`;
+  
+  // 替换播放按钮为内嵌播放器
+  const playerContainer = document.getElementById('playerContainer');
+  if (playerContainer) {
+    playerContainer.innerHTML = `
+      <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; background: #000; border-radius: 12px;">
+        <iframe 
+          src="${playlist.embed_url}" 
+          style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+        ></iframe>
+      </div>
+    `;
+  }
+  
+  // 更新打卡按钮
+  const checkinBtn = document.getElementById('checkinBtn');
+  if (checkinBtn) {
+    checkinBtn.style.display = 'block';
+  }
   
   switchView('player');
 }
