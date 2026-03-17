@@ -1,0 +1,116 @@
+{
+  "targets": [
+    {
+      "target_id": "focus",
+      "name": "深度专注",
+      "icon": "🎯",
+      "description": "进入心流状态，提升工作效率",
+      "mapped_regions": ["prefrontal", "dmn"],
+      "recommended_duration": 25,
+      "playlist_id": "focus-001"
+    },
+    {
+      "target_id": "calm",
+      "name": "情绪平衡",
+      "icon": "🌊",
+      "description": "缓解焦虑，恢复内心平静",
+      "mapped_regions": ["amygdala", "acc_insula"],
+      "recommended_duration": 15,
+      "playlist_id": "calm-001"
+    },
+    {
+      "target_id": "energy",
+      "name": "活力唤醒",
+      "icon": "⚡",
+      "description": "快速提升能量，摆脱疲惫",
+      "mapped_regions": ["basal_ganglia", "nucleus_accumbens"],
+      "recommended_duration": 10,
+      "playlist_id": "energy-001"
+    },
+    {
+      "target_id": "creative",
+      "name": "创意发散",
+      "icon": "💡",
+      "description": "激发灵感，拓展思维边界",
+      "mapped_regions": ["dmn", "auditory_cortex"],
+      "recommended_duration": 30,
+      "playlist_id": "creative-001"
+    },
+    {
+      "target_id": "memory",
+      "name": "记忆强化",
+      "icon": "🧠",
+      "description": "激活海马体，增强记忆编码",
+      "mapped_regions": ["hippocampus", "auditory_cortex"],
+      "recommended_duration": 20,
+      "playlist_id": "memory-001"
+    },
+    {
+      "target_id": "sleep",
+      "name": "睡前放松",
+      "icon": "🌙",
+      "description": "平缓脑波，准备高质量睡眠",
+      "mapped_regions": ["dmn", "amygdala"],
+      "recommended_duration": 30,
+      "playlist_id": "sleep-001"
+    }
+  ],
+  "playlists": [
+    {
+      "playlist_id": "focus-001",
+      "target_id": "focus",
+      "platform": "spotify",
+      "external_url": "https://open.spotify.com/playlist/37i9dQZF1DWZeKCadgRdKQ",
+      "bpm_range": "60-80",
+      "has_lyrics": false,
+      "genre_tags": ["ambient", "classical", "lo-fi"]
+    },
+    {
+      "playlist_id": "calm-001",
+      "target_id": "calm",
+      "platform": "spotify",
+      "external_url": "https://open.spotify.com/playlist/37i9dQZF1DX4sWSpwq3LiO",
+      "bpm_range": "50-70",
+      "has_lyrics": false,
+      "genre_tags": ["ambient", "nature", "meditation"]
+    },
+    {
+      "playlist_id": "energy-001",
+      "target_id": "energy",
+      "platform": "spotify",
+      "external_url": "https://open.spotify.com/playlist/37i9dQZF1DX76Wlfdnj7AP",
+      "bpm_range": "120-140",
+      "has_lyrics": true,
+      "genre_tags": ["electronic", "pop", "rock"]
+    },
+    {
+      "playlist_id": "creative-001",
+      "target_id": "creative",
+      "platform": "spotify",
+      "external_url": "https://open.spotify.com/playlist/37i9dQZF1DX1s9knjPY1Oa",
+      "bpm_range": "70-100",
+      "has_lyrics": false,
+      "genre_tags": ["jazz", "classical", "world"]
+    },
+    {
+      "playlist_id": "memory-001",
+      "target_id": "memory",
+      "platform": "spotify",
+      "external_url": "https://open.spotify.com/playlist/37i9dQZF1DWVFeEut75IAL",
+      "bpm_range": "60-90",
+      "has_lyrics": false,
+      "genre_tags": ["classical", "baroque", "ambient"]
+    },
+    {
+      "playlist_id": "sleep-001",
+      "target_id": "sleep",
+      "platform": "spotify",
+      "external_url": "https://open.spotify.com/playlist/37i9dQZF1DWZd79rJ6a7lp",
+      "bpm_range": "40-60",
+      "has_lyrics": false,
+      "genre_tags": ["ambient", "nature", "drone"]
+    }
+  ],
+  "checkins": [],
+  "brainScores": []
+}

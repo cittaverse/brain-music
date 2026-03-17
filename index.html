@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brain Music - 音乐认知训练</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #6366f1;
+      --primary-dark: #4f46e5;
+      --secondary: #10b981;
+      --bg: #0f172a;
+      --bg-card: #1e293b;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --border: #334155;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    header {
+      text-align: center;
+      padding: 30px 0;
+    }
+
+    header h1 {
+      font-size: 28px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #6366f1, #10b981);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
+    }
+
+    header p {
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    .view {
+      display: none;
+    }
+
+    .view.active {
+      display: block;
+    }
+
+    /* 目标选择卡片 */
+    .target-grid {
+      display: grid;
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .target-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .target-card:hover {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+    }
+
+    .target-card.selected {
+      border-color: var(--primary);
+      background: rgba(99, 102, 241, 0.1);
+    }
+
+    .target-icon {
+      font-size: 32px;
+      margin-bottom: 12px;
+    }
+
+    .target-name {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .target-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .target-duration {
+      font-size: 12px;
+      color: var(--primary);
+      background: rgba(99, 102, 241, 0.1);
+      padding: 4px 8px;
+      border-radius: 4px;
+      display: inline-block;
+    }
+
+    /* 播放页面 */
+    .player-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 30px;
+      text-align: center;
+      margin-top: 24px;
+    }
+
+    .player-icon {
+      font-size: 64px;
+      margin-bottom: 20px;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+
+    .player-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .player-status {
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+
+    .btn {
+      display: inline-block;
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+      margin-top: 12px;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--primary);
+    }
+
+    /* 打卡表单 */
+    .checkin-form {
+      margin-top: 24px;
+    }
+
+    .checkin-question {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+
+    .question-text {
+      font-size: 16px;
+      font-weight: 500;
+      margin-bottom: 16px;
+    }
+
+    .slider-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .slider {
+      flex: 1;
+      -webkit-appearance: none;
+      height: 8px;
+      border-radius: 4px;
+      background: var(--border);
+      outline: none;
+    }
+
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--primary);
+      cursor: pointer;
+    }
+
+    .slider-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 8px;
+    }
+
+    .radio-options {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .radio-option {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      background: var(--bg);
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .radio-option input {
+      width: 20px;
+      height: 20px;
+    }
+
+    /* 热力图 */
+    .brain-viz {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 24px;
+      margin-top: 24px;
+    }
+
+    .brain-title {
+      font-size: 18px;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .brain-diagram {
+      position: relative;
+      width: 200px;
+      height: 240px;
+      margin: 0 auto 24px;
+    }
+
+    .brain-outline {
+      fill: none;
+      stroke: var(--border);
+      stroke-width: 2;
+    }
+
+    .brain-region {
+      fill: var(--bg);
+      stroke: var(--border);
+      stroke-width: 1;
+      transition: all 0.3s;
+    }
+
+    .brain-region.active {
+      fill: rgba(99, 102, 241, 0.3);
+      stroke: var(--primary);
+    }
+
+    .region-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .region-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px;
+      background: var(--bg);
+      border-radius: 8px;
+    }
+
+    .region-info {
+      flex: 1;
+    }
+
+    .region-name {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .region-function {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .region-score {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .score-bar {
+      width: 60px;
+      height: 8px;
+      background: var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .score-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      border-radius: 4px;
+      transition: width 0.5s;
+    }
+
+    .score-value {
+      font-size: 14px;
+      font-weight: 600;
+      width: 24px;
+      text-align: right;
+    }
+
+    .trend-up { color: var(--secondary); }
+    .trend-down { color: #ef4444; }
+    .trend-stable { color: var(--text-muted); }
+
+    /* 导航 */
+    .nav-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--bg-card);
+      border-top: 1px solid var(--border);
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-around;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      color: var(--text-muted);
+      font-size: 12px;
+      cursor: pointer;
+      padding: 8px 16px;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+
+    .nav-item.active {
+      color: var(--primary);
+    }
+
+    .nav-icon {
+      font-size: 20px;
+    }
+
+    /* 进度指示器 */
+    .progress-dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--border);
+    }
+
+    .dot.active {
+      background: var(--primary);
+    }
+
+    /* 工具类 */
+    .hidden { display: none !important; }
+    .text-center { text-align: center; }
+    .mt-4 { margin-top: 16px; }
+    .mb-4 { margin-bottom: 16px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🧠 Brain Music</h1>
+      <p>用科学设计的音乐训练你的大脑</p>
+    </header>
+
+    <!-- 视图 1: 目标选择 -->
+    <div id="view-targets" class="view active">
+      <h2 style="font-size: 18px; margin-bottom: 8px;">选择训练目标</h2>
+      <p style="color: var(--text-muted); font-size: 14px;">选择一个你想强化的认知能力</p>
+      <div class="target-grid" id="targetGrid"></div>
+    </div>
+
+    <!-- 视图 2: 播放 -->
+    <div id="view-player" class="view">
+      <div class="player-card">
+        <div class="player-icon">🎵</div>
+        <div class="player-title" id="playerTitle">深度专注</div>
+        <div class="player-status">准备进入训练状态</div>
+        <a href="#" class="btn btn-primary" id="playBtn" target="_blank">
+          开始播放 →
+        </a>
+        <button class="btn btn-secondary" id="finishBtn">
+          完成训练，进入打卡
+        </button>
+      </div>
+    </div>
+
+    <!-- 视图 3: 打卡 -->
+    <div id="view-checkin" class="view">
+      <div class="progress-dots" id="progressDots"></div>
+      <form class="checkin-form" id="checkinForm">
+        <!-- 问题由 JS 动态生成 -->
+      </form>
+      <button class="btn btn-primary mt-4" id="submitCheckin">
+        生成脑区快照 →
+      </button>
+    </div>
+
+    <!-- 视图 4: 热力图结果 -->
+    <div id="view-result" class="view">
+      <div class="brain-viz">
+        <div class="brain-title">本次脑区激活快照</div>
+        <svg class="brain-diagram" viewBox="0 0 200 240">
+          <path class="brain-outline" d="M100 20 C60 20 30 60 30 120 C30 180 60 220 100 220 C140 220 170 180 170 120 C170 60 140 20 100 20"/>
+          <circle class="brain-region" id="region-prefrontal" cx="100" cy="50" r="25"/>
+          <circle class="brain-region" id="region-amygdala" cx="70" cy="90" r="18"/>
+          <circle class="brain-region" id="region-hippocampus" cx="130" cy="90" r="18"/>
+          <circle class="brain-region" id="region-basal" cx="100" cy="130" r="22"/>
+          <circle class="brain-region" id="region-accumbens" cx="100" cy="160" r="15"/>
+          <circle class="brain-region" id="region-dmn" cx="100" cy="190" r="20"/>
+          <ellipse class="brain-region" id="region-insula" cx="55" cy="130" rx="15" ry="25"/>
+          <ellipse class="brain-region" id="region-auditory" cx="145" cy="130" rx="15" ry="25"/>
+        </svg>
+        <div class="region-list" id="regionList"></div>
+      </div>
+      <button class="btn btn-primary mt-4" id="newSessionBtn">
+        开始新训练
+      </button>
+    </div>
+  </div>
+
+  <!-- 底部导航 -->
+  <nav class="nav-bar">
+    <div class="nav-item active" data-view="targets">
+      <span class="nav-icon">🎯</span>
+      <span>训练</span>
+    </div>
+    <div class="nav-item" data-view="result">
+      <span class="nav-icon">📊</span>
+      <span>我的</span>
+    </div>
+  </nav>
+
+  <script src="app.js"></script>
+</body>
+</html>
