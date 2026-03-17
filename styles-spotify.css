@@ -405,7 +405,8 @@ input[type="range"]::-webkit-slider-thumb {
   background: var(--bg-card);
   border-top: 1px solid var(--bg-highlight);
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
+  gap: 48px;
   padding: 12px 0;
   padding-bottom: max(12px, env(safe-area-inset-bottom));
 }
