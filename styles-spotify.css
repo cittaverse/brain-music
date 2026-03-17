@@ -80,6 +80,7 @@ body {
   max-width: 480px;
   margin: 0 auto;
   padding: 0 16px 100px;
+  background: var(--bg-primary);
 }
 
 /* 卡片风格 */
@@ -458,4 +459,6 @@ input[type="range"]::-webkit-slider-thumb {
 
 .hidden {
   display: none !important;
+}
+e !important;
 }
