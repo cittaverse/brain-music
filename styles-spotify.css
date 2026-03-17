@@ -460,6 +460,12 @@ input[type="range"]::-webkit-slider-thumb {
 /* 工具类 */
 .mt-4 {
   margin-top: 16px;
+  text-align: center;
+}
+
+.mt-4 .btn {
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .hidden {
