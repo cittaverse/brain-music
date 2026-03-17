@@ -105,8 +105,24 @@ function selectTarget(targetId) {
   state.selectedTarget = db.targets.find(t => t.target_id === targetId);
   const playlist = db.playlists.find(p => p.playlist_id === state.selectedTarget.playlist_id);
   
-  // 更新播放页面 - 内嵌 YouTube 播放器
+  // 更新播放页面 - 使用 SVG 图标
+  const iconSvg = getTargetIcon(state.selectedTarget.target_id);
   document.getElementById('playerTitle').textContent = state.selectedTarget.name;
+  
+  // 替换播放器图标容器
+  const playerIcon = document.querySelector('.player-icon');
+  if (playerIcon) {
+    playerIcon.innerHTML = iconSvg;
+    playerIcon.style.background = 'linear-gradient(135deg, var(--gradient-start), var(--gradient-end))';
+    playerIcon.style.borderRadius = '50%';
+    playerIcon.style.width = '64px';
+    playerIcon.style.height = '64px';
+    playerIcon.style.margin = '0 auto 20px';
+    playerIcon.style.display = 'flex';
+    playerIcon.style.alignItems = 'center';
+    playerIcon.style.justifyContent = 'center';
+    playerIcon.style.padding = '14px';
+  }
   
   // 替换播放按钮为内嵌播放器
   const playerContainer = document.getElementById('playerContainer');
