@@ -102,7 +102,50 @@
       </div>
       
       <div style="text-align: center; margin-top: 16px;">
+        <button class="btn btn-share" id="shareBtn" style="display: inline-block; margin: 0 auto 12px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+          分享训练成果
+        </button>
+        <br>
         <button class="btn btn-primary" id="newSessionBtn" style="display: inline-block; margin: 0 auto;">开始新训练</button>
+      </div>
+    </div>
+
+    <!-- 视图 5: 我的（累计训练画像） -->
+    <div id="view-profile" class="view">
+      <div class="card profile-section">
+        <div class="profile-section-title">训练概览</div>
+        <div class="profile-stats">
+          <div class="stat-item">
+            <div class="stat-value" id="profileTotalDays">0</div>
+            <div class="stat-label">训练天数</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" id="profileTotalMinutes">0</div>
+            <div class="stat-label">总时长(分)</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" id="profileTotalSessions">0</div>
+            <div class="stat-label">训练次数</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card profile-section">
+        <div class="profile-section-title">训练目标分布</div>
+        <div class="target-stats-list" id="profileTargetStats">
+          <!-- 由 JS 动态生成 -->
+        </div>
+      </div>
+
+      <div class="card profile-section">
+        <div class="profile-section-title">脑区累计评分</div>
+        <div id="profileActiveRegion"></div>
+        <div class="brain-chart-container">
+          <div class="brain-chart" id="profileBrainChart">
+            <!-- 由 JS 动态生成 -->
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -116,7 +159,7 @@
       </svg>
       <span>训练</span>
     </a>
-    <a href="#" class="nav-item" data-view="result">
+    <a href="#" class="nav-item" data-view="profile">
       <svg class="nav-icon" viewBox="0 0 24 24">
         <rect x="3" y="3" width="7" height="7" rx="1" fill="currentColor"/>
         <rect x="14" y="3" width="7" height="7" rx="1" fill="currentColor" opacity="0.5"/>
@@ -129,6 +172,8 @@
 
   <script src="target-icons.js"></script>
   <script src="brain-mapping.js"></script>
+  <script src="training-guides.js"></script>
+  <script src="share-card.js"></script>
   <script src="app.js"></script>
   <script>loadDB();</script>
 </body>

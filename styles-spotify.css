@@ -518,5 +518,314 @@ input[type="range"]::-webkit-slider-thumb {
 .hidden {
   display: none !important;
 }
-e !important;
+
+/* ========== 训练引导文案 ========== */
+.training-guide {
+  margin: 16px 0;
+  padding: 16px 20px;
+  background: rgba(139, 92, 246, 0.08);
+  border-radius: 12px;
+  border-left: 3px solid var(--gradient-start);
+  text-align: center;
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.5s ease;
+}
+
+.training-guide-text {
+  font-size: 14px;
+  color: #c4b5fd;
+  line-height: 1.6;
+  font-style: italic;
+}
+
+.training-guide.fade-out {
+  opacity: 0;
+}
+
+.training-guide.fade-in {
+  opacity: 1;
+}
+
+/* ========== 累计训练画像 (我的页面) ========== */
+.profile-section {
+  margin-bottom: 16px;
+}
+
+.profile-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.stat-item {
+  background: var(--bg-highlight);
+  border-radius: 12px;
+  padding: 16px 12px;
+  text-align: center;
+}
+
+.stat-value {
+  font-size: 28px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #4ade80, #3b82f6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.2;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+.profile-section-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--text-primary);
+}
+
+/* 训练目标完成次数 */
+.target-stats-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.target-stat-chip {
+  background: var(--bg-highlight);
+  border-radius: 20px;
+  padding: 8px 14px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.target-stat-chip .chip-count {
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* 脑区柱状图 */
+.brain-chart-container {
+  background: var(--bg-highlight);
+  border-radius: 12px;
+  padding: 20px 16px;
+  margin-bottom: 16px;
+}
+
+.brain-chart {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  height: 120px;
+  padding: 0 4px;
+  margin-bottom: 8px;
+}
+
+.brain-chart-bar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  gap: 4px;
+}
+
+.brain-chart-bar-fill {
+  width: 20px;
+  border-radius: 4px 4px 2px 2px;
+  background: linear-gradient(180deg, #8b5cf6, #6366f1);
+  transition: height 0.6s ease;
+  min-height: 2px;
+}
+
+.brain-chart-bar-label {
+  font-size: 10px;
+  color: var(--text-secondary);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.brain-chart-bar-value {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* 最活跃脑区标签 */
+.active-region-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(139, 92, 246, 0.15);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-size: 14px;
+  color: #c4b5fd;
+  margin-bottom: 8px;
+}
+
+.active-region-tag svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* 无数据提示 */
+.empty-state {
+  text-align: center;
+  padding: 48px 24px;
+  color: var(--text-secondary);
+}
+
+.empty-state-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 16px;
+  opacity: 0.3;
+}
+
+.empty-state-text {
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+.empty-state-hint {
+  font-size: 13px;
+  color: var(--text-secondary);
+  opacity: 0.6;
+}
+
+/* ========== 分享卡片弹窗 ========== */
+.share-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.share-modal.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.share-modal-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+}
+
+.share-modal-content {
+  position: relative;
+  background: var(--bg-card);
+  border-radius: var(--border-radius-lg);
+  max-width: 400px;
+  width: calc(100% - 32px);
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+  transform: translateY(20px);
+  transition: transform 0.3s ease;
+}
+
+.share-modal.active .share-modal-content {
+  transform: translateY(0);
+}
+
+.share-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--bg-highlight);
+}
+
+.share-modal-title {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.share-modal-close {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background 0.2s;
+}
+
+.share-modal-close:hover {
+  background: var(--bg-highlight);
+  color: var(--text-primary);
+}
+
+.share-modal-body {
+  padding: 20px;
+  text-align: center;
+}
+
+.share-card-image {
+  width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.share-tip {
+  margin-top: 16px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+/* 分享按钮 */
+.btn-share {
+  background: var(--bg-highlight);
+  color: var(--text-primary);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+}
+
+.btn-share:hover {
+  background: rgba(139, 92, 246, 0.15);
+  border-color: rgba(139, 92, 246, 0.5);
+}
+
+.btn-share svg {
+  width: 18px;
+  height: 18px;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+
+/* ========== 我的页面视图 ========== */
+#view-profile .card {
+  /* 防止 hover 上浮影响布局 */
+}
+
+#view-profile .card:hover {
+  transform: none;
+  box-shadow: var(--shadow);
 }

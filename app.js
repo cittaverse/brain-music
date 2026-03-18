@@ -161,10 +161,33 @@ function selectTarget(targetId) {
     finishBtn.disabled = true;
   }
   
+  // 插入训练引导文案容器
+  let guideContainer = document.querySelector('.training-guide');
+  if (!guideContainer) {
+    guideContainer = document.createElement('div');
+    guideContainer.className = 'training-guide fade-in';
+    guideContainer.innerHTML = '<div class="training-guide-text"></div>';
+    const trainingProgress = document.getElementById('trainingProgress');
+    if (trainingProgress) {
+      trainingProgress.parentNode.insertBefore(guideContainer, trainingProgress);
+    }
+  }
+  
+  // 显示第一条引导文案
+  let guideIndex = 0;
+  const guideTextEl = guideContainer.querySelector('.training-guide-text');
+  if (guideTextEl) {
+    guideTextEl.textContent = getGuideByIndex(state.selectedTarget.target_id, guideIndex);
+  }
+  guideContainer.classList.remove('fade-out');
+  guideContainer.classList.add('fade-in');
+  
   // 启动倒计时
   if (state.trainingTimer) {
     clearInterval(state.trainingTimer);
   }
+  
+  let lastGuideSwitch = 0;
   
   state.trainingTimer = setInterval(() => {
     const elapsed = Math.floor((Date.now() - state.trainingStartTime) / 1000);
@@ -179,6 +202,23 @@ function selectTarget(targetId) {
     // 更新进度条
     if (progressFill) {
       progressFill.style.width = `${Math.min(progress, 100)}%`;
+    }
+    
+    // 每 30 秒切换引导文案
+    const currentGuideSlot = Math.floor(elapsed / 30);
+    if (currentGuideSlot > lastGuideSwitch) {
+      lastGuideSwitch = currentGuideSlot;
+      guideIndex++;
+      // 淡出 → 切换 → 淡入
+      if (guideContainer && guideTextEl) {
+        guideContainer.classList.remove('fade-in');
+        guideContainer.classList.add('fade-out');
+        setTimeout(() => {
+          guideTextEl.textContent = getGuideByIndex(state.selectedTarget.target_id, guideIndex);
+          guideContainer.classList.remove('fade-out');
+          guideContainer.classList.add('fade-in');
+        }, 500);
+      }
     }
     
     // 解锁按钮（训练完成 50% 后）
@@ -227,6 +267,8 @@ function switchView(viewName) {
     renderCheckinForm();
   } else if (viewName === 'result') {
     renderResult();
+  } else if (viewName === 'profile') {
+    renderProfile();
   }
 }
 
@@ -301,10 +343,16 @@ function renderQuestion(index) {
 
 // 提交打卡
 function submitCheckin() {
+  const elapsed = state.trainingStartTime
+    ? Math.floor((Date.now() - state.trainingStartTime) / 1000)
+    : (state.selectedTarget ? state.selectedTarget.recommended_duration * 60 : 0);
+  
   const checkin = {
     id: Date.now(),
     date: new Date().toISOString(),
     targetId: state.selectedTarget.target_id,
+    targetName: state.selectedTarget.name,
+    durationSeconds: elapsed,
     answers: { ...state.answers }
   };
   
@@ -436,9 +484,12 @@ document.getElementById('newSessionBtn').addEventListener('click', () => {
 
 // 导航点击
 document.querySelectorAll('.nav-item').forEach(item => {
-  item.addEventListener('click', () => {
+  item.addEventListener('click', (e) => {
+    e.preventDefault();
     const view = item.dataset.view;
-    if (view === 'result') {
+    if (view === 'profile') {
+      switchView('profile');
+    } else if (view === 'result') {
       // 如果有历史数据，显示历史结果
       if (state.checkinHistory.length > 0) {
         state.answers = state.checkinHistory[state.checkinHistory.length - 1].answers;
@@ -450,5 +501,193 @@ document.querySelectorAll('.nav-item').forEach(item => {
   });
 });
 
-// 初始化
-loadDB();
+// 分享按钮
+document.getElementById('shareBtn').addEventListener('click', () => {
+  const scores = calculateBrainScores(state.answers);
+  const totalDays = getTrainingDays();
+  const targetName = state.selectedTarget ? state.selectedTarget.name : '脑力训练';
+  const targetId = state.selectedTarget ? state.selectedTarget.target_id : 'focus';
+  
+  generateShareCard({
+    targetName: targetName,
+    targetId: targetId,
+    scores: scores,
+    totalDays: totalDays
+  }).then(dataUrl => {
+    showShareModal(dataUrl);
+  });
+});
+
+// ========== 累计训练画像渲染 ==========
+function renderProfile() {
+  const checkins = state.checkinHistory;
+  
+  // 无数据时显示空状态
+  if (checkins.length === 0) {
+    const profileView = document.getElementById('view-profile');
+    profileView.innerHTML = `
+      <div class="card">
+        <div class="empty-state">
+          <div class="empty-state-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 6v6l4 2"/>
+            </svg>
+          </div>
+          <div class="empty-state-text">还没有训练记录</div>
+          <div class="empty-state-hint">完成第一次训练后，这里会显示你的训练画像</div>
+        </div>
+      </div>
+    `;
+    return;
+  }
+  
+  // 确保 profile 视图结构存在（恢复可能被 empty state 覆盖的结构）
+  const profileView = document.getElementById('view-profile');
+  if (!profileView.querySelector('.profile-stats')) {
+    profileView.innerHTML = `
+      <div class="card profile-section">
+        <div class="profile-section-title">训练概览</div>
+        <div class="profile-stats">
+          <div class="stat-item">
+            <div class="stat-value" id="profileTotalDays">0</div>
+            <div class="stat-label">训练天数</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" id="profileTotalMinutes">0</div>
+            <div class="stat-label">总时长(分)</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" id="profileTotalSessions">0</div>
+            <div class="stat-label">训练次数</div>
+          </div>
+        </div>
+      </div>
+      <div class="card profile-section">
+        <div class="profile-section-title">训练目标分布</div>
+        <div class="target-stats-list" id="profileTargetStats"></div>
+      </div>
+      <div class="card profile-section">
+        <div class="profile-section-title">脑区累计评分</div>
+        <div id="profileActiveRegion"></div>
+        <div class="brain-chart-container">
+          <div class="brain-chart" id="profileBrainChart"></div>
+        </div>
+      </div>
+    `;
+  }
+  
+  // 1. 累计训练天数
+  const uniqueDays = new Set(checkins.map(c => new Date(c.date).toDateString()));
+  const totalDays = uniqueDays.size;
+  
+  // 2. 累计训练时长（分钟）
+  let totalSeconds = 0;
+  checkins.forEach(c => {
+    if (c.durationSeconds) {
+      totalSeconds += c.durationSeconds;
+    } else {
+      // 兼容旧数据：用目标推荐时长估算
+      const target = db.targets.find(t => t.target_id === c.targetId);
+      totalSeconds += (target ? target.recommended_duration : 15) * 60;
+    }
+  });
+  const totalMinutes = Math.round(totalSeconds / 60);
+  
+  // 3. 训练次数
+  const totalSessions = checkins.length;
+  
+  // 更新数字
+  const daysEl = document.getElementById('profileTotalDays');
+  const minsEl = document.getElementById('profileTotalMinutes');
+  const sessEl = document.getElementById('profileTotalSessions');
+  if (daysEl) daysEl.textContent = totalDays;
+  if (minsEl) minsEl.textContent = totalMinutes;
+  if (sessEl) sessEl.textContent = totalSessions;
+  
+  // 4. 每个训练目标的完成次数
+  const targetCounts = {};
+  checkins.forEach(c => {
+    const tid = c.targetId;
+    targetCounts[tid] = (targetCounts[tid] || 0) + 1;
+  });
+  
+  const targetStatsEl = document.getElementById('profileTargetStats');
+  if (targetStatsEl) {
+    targetStatsEl.innerHTML = Object.entries(targetCounts)
+      .sort((a, b) => b[1] - a[1])
+      .map(([tid, count]) => {
+        const target = db.targets.find(t => t.target_id === tid);
+        const name = target ? target.name : tid;
+        return `<div class="target-stat-chip">${name} <span class="chip-count">${count}次</span></div>`;
+      }).join('');
+  }
+  
+  // 5. 脑区累计平均评分
+  const regionNames = {
+    prefrontal: '前额叶',
+    amygdala: '杏仁核',
+    hippocampus: '海马体',
+    basal_ganglia: '基底节',
+    nucleus_accumbens: '伏隔核',
+    dmn: '默认网络',
+    acc_insula: '岛叶',
+    auditory_cortex: '听觉皮层'
+  };
+  
+  const regionTotals = {};
+  Object.keys(regionNames).forEach(r => { regionTotals[r] = 0; });
+  
+  checkins.forEach(c => {
+    const scores = calculateBrainScores(c.answers);
+    Object.entries(scores).forEach(([region, score]) => {
+      regionTotals[region] += score;
+    });
+  });
+  
+  const regionAvgs = {};
+  Object.keys(regionTotals).forEach(r => {
+    regionAvgs[r] = Math.round((regionTotals[r] / checkins.length) * 10) / 10;
+  });
+  
+  // 找最活跃脑区
+  let maxRegion = '';
+  let maxScore = 0;
+  Object.entries(regionAvgs).forEach(([r, s]) => {
+    if (s > maxScore) {
+      maxScore = s;
+      maxRegion = r;
+    }
+  });
+  
+  const activeRegionEl = document.getElementById('profileActiveRegion');
+  if (activeRegionEl && maxRegion) {
+    activeRegionEl.innerHTML = `
+      <div class="active-region-tag">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#c4b5fd" stroke-width="2" stroke-linecap="round">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+        </svg>
+        最活跃脑区：${regionNames[maxRegion]}（均分 ${maxScore}）
+      </div>
+    `;
+  }
+  
+  // 6. 柱状图
+  const chartEl = document.getElementById('profileBrainChart');
+  if (chartEl) {
+    const maxVal = Math.max(...Object.values(regionAvgs), 1);
+    chartEl.innerHTML = Object.entries(regionAvgs).map(([region, avg]) => {
+      const barHeight = Math.max(2, (avg / 5) * 100);
+      const shortName = regionNames[region].substring(0, 3);
+      return `
+        <div class="brain-chart-bar">
+          <div class="brain-chart-bar-value">${avg}</div>
+          <div class="brain-chart-bar-fill" style="height: ${barHeight}px;"></div>
+          <div class="brain-chart-bar-label">${shortName}</div>
+        </div>
+      `;
+    }).join('');
+  }
+}
+
+// 初始化由 HTML 中的 loadDB() 调用触发

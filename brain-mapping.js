@@ -176,8 +176,11 @@ function generateBrainHeatmap(checkinRecords) {
   });
 }
 
-module.exports = {
-  BRAIN_REGIONS,
-  calculateBrainScores,
-  generateBrainHeatmap
-};
+// Export for Node.js environments (skip in browser)
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = {
+    BRAIN_REGIONS,
+    calculateBrainScores,
+    generateBrainHeatmap
+  };
+}
