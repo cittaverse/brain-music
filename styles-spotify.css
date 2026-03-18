@@ -208,8 +208,7 @@ body {
   cursor: pointer;
   transition: transform 0.1s, box-shadow 0.2s;
   text-decoration: none;
-  width: 100%;
-  max-width: 320px;
+  text-align: center;
 }
 
 .btn-primary {
