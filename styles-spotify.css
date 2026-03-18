@@ -197,6 +197,39 @@ body {
   box-shadow: var(--shadow);
 }
 
+/* 训练进度 */
+.training-progress {
+  margin: 24px 0;
+  text-align: center;
+}
+
+.progress-bar {
+  width: 100%;
+  max-width: 320px;
+  height: 8px;
+  background: var(--bg-highlight);
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 0 auto 12px;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+  transition: width 1s linear;
+}
+
+.progress-text {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+#countdown {
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
 /* 按钮风格 */
 .btn {
   display: inline-block;
@@ -211,10 +244,21 @@ body {
   text-align: center;
 }
 
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
 .btn-primary {
   background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
   color: white;
   box-shadow: 0 4px 16px rgba(139, 92, 246, 0.4);
+}
+
+.btn-primary:disabled {
+  background: var(--bg-highlight);
+  box-shadow: none;
 }
 
 .btn-primary:hover {

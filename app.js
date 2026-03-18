@@ -56,7 +56,10 @@ let state = {
   selectedTarget: null,
   currentQuestion: 0,
   answers: {},
-  checkinHistory: []
+  checkinHistory: [],
+  trainingTimer: null,
+  trainingStartTime: null,
+  trainingDuration: 0
 };
 
 // 加载数据
@@ -140,13 +143,73 @@ function selectTarget(targetId) {
     `;
   }
   
-  // 更新打卡按钮
-  const checkinBtn = document.getElementById('checkinBtn');
-  if (checkinBtn) {
-    checkinBtn.style.display = 'block';
+  // 初始化训练进度
+  const duration = state.selectedTarget.recommended_duration || 25;
+  state.trainingDuration = duration * 60; // 转换为秒
+  state.trainingStartTime = Date.now();
+  
+  // 更新进度显示
+  const progressText = document.getElementById('progressText');
+  const countdown = document.getElementById('countdown');
+  const progressFill = document.getElementById('progressFill');
+  const finishBtn = document.getElementById('finishBtn');
+  
+  if (progressText && countdown && progressFill && finishBtn) {
+    progressText.style.display = 'block';
+    countdown.textContent = formatTime(state.trainingDuration);
+    progressFill.style.width = '0%';
+    finishBtn.disabled = true;
   }
   
+  // 启动倒计时
+  if (state.trainingTimer) {
+    clearInterval(state.trainingTimer);
+  }
+  
+  state.trainingTimer = setInterval(() => {
+    const elapsed = Math.floor((Date.now() - state.trainingStartTime) / 1000);
+    const remaining = Math.max(0, state.trainingDuration - elapsed);
+    const progress = (elapsed / state.trainingDuration) * 100;
+    
+    // 更新倒计时显示
+    if (countdown) {
+      countdown.textContent = formatTime(remaining);
+    }
+    
+    // 更新进度条
+    if (progressFill) {
+      progressFill.style.width = `${Math.min(progress, 100)}%`;
+    }
+    
+    // 解锁按钮（训练完成 50% 后）
+    const unlockThreshold = state.trainingDuration * 0.5;
+    if (finishBtn && elapsed >= unlockThreshold) {
+      finishBtn.disabled = false;
+      if (progressText) {
+        progressText.innerHTML = '<span style="color: var(--primary);">✓ 可以完成训练</span>';
+      }
+    }
+    
+    // 训练结束
+    if (remaining <= 0) {
+      clearInterval(state.trainingTimer);
+      if (finishBtn) {
+        finishBtn.disabled = false;
+      }
+      if (progressText) {
+        progressText.innerHTML = '<span style="color: var(--primary);">✓ 训练完成！</span>';
+      }
+    }
+  }, 1000);
+  
   switchView('player');
+}
+
+// 格式化时间（秒 → MM:SS）
+function formatTime(seconds) {
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
 }
 
 // 切换视图

@@ -47,7 +47,17 @@
         <!-- YouTube 内嵌播放器容器 -->
         <div id="playerContainer"></div>
         
-        <button class="btn btn-primary" id="finishBtn">
+        <!-- 训练进度 -->
+        <div class="training-progress" id="trainingProgress">
+          <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+          </div>
+          <div class="progress-text" id="progressText">
+            训练剩余：<span id="countdown">25:00</span>
+          </div>
+        </div>
+        
+        <button class="btn btn-primary" id="finishBtn" disabled>
           完成训练，进入打卡
         </button>
       </div>
