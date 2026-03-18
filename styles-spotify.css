@@ -465,10 +465,10 @@ input[type="range"]::-webkit-slider-thumb {
 }
 
 .mt-4 .btn {
-  margin: 16px auto 0;
-  display: block;
-  width: fit-content;
-  max-width: 320px;
+  margin: 16px auto 0 !important;
+  display: block !important;
+  width: fit-content !important;
+  max-width: 320px !important;
 }
 
 .hidden {
